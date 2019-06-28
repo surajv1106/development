@@ -4,17 +4,21 @@ package com.postgress.controller;
 import java.util.Optional;
 import com.postgress.error.CustomErrorType;
 import com.postgress.model.Employee;
+import com.postgress.model.EmployeeDetails;
 import com.postgress.repository.EmployeeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+
 
 @RestController
 public class EmployeeController {
@@ -26,13 +30,26 @@ public class EmployeeController {
 
 
 
-    @GetMapping("/findall")
+    /*@GetMapping("/findall")
     public ResponseEntity<List<Employee>> findAll(){
         List<Employee> employeess = repository.findAll();
         if(employeess.isEmpty()){
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(employeess);
+        //return new ResponseEntity<List<Employee>>(employeess, HttpStatus.OK);
+
+    }*/
+
+    @GetMapping("/findallEmployee")
+    public ResponseEntity<EmployeeDetails> getAllEmployee(){
+        List<Employee> employeess = repository.findAll();
+        if(employeess.isEmpty()){
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+        EmployeeDetails details=new EmployeeDetails();
+        details.setList(employeess);
+        return ResponseEntity.ok(details);
         //return new ResponseEntity<List<Employee>>(employeess, HttpStatus.OK);
 
     }
@@ -53,6 +70,7 @@ public class EmployeeController {
 
     @PostMapping("/addEmployee")
     public ResponseEntity create(@Valid @RequestBody Employee employee) {
+
         return ResponseEntity.ok(repository.save(employee));
     }
 
